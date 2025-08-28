@@ -1,0 +1,69 @@
+<!-- mentorship.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Mentorship Hub</title>
+	<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+	<header class="nav">
+		<div class="nav-left">
+			<div class="brand">
+				<div class="brand-logo">CC</div>
+				<div class="brand-text">CampusConnect</div>
+			</div>
+			<nav class="nav-links">
+				<a href="index.html">Home</a>
+				<a href="mentorship.html">Mentorship Hub</a>
+				<a href="events.html">Events & Opportunities</a>
+				<a href="skill-swap.html">Skill Swap & Team Finder</a>
+				<a href="anonymous-chat.html">Anonymous Chat</a>
+			</nav>
+		</div>
+		<div class="nav-right">
+			<a class="btn ghost" href="auth.html#signin">Sign In</a>
+			<a class="btn solid" href="auth.html#signup">Sign Up</a>
+		</div>
+	</header>
+
+	<section class="features" style="margin-top:20px">
+		<h2>Freshman–Senior Connect</h2>
+		<p class="small">Smart recommendations by skills and interests.</p>
+		<div class="features-grid">
+			<div class="feature">
+				<h4>Find Mentors</h4>
+				<p>Filter by stream, role, and skills.</p>
+			</div>
+			<div class="feature">
+				<h4>Role-based onboarding</h4>
+				<p>Freshman, Senior, Alumni — tailored suggestions.</p>
+			</div>
+			<div class="feature">
+				<h4>Message</h4>
+				<p>Start safe conversations (anonymous or named).</p>
+			</div>
+			<div class="feature">
+				<h4>Schedule</h4>
+				<p>Book sessions for doubts or career guidance.</p>
+			</div>
+		</div>
+	</section>
+
+	<script src="script.js"></script>
+	<script>
+	// Example: personalized greeting if signed in
+	const email=localStorage.getItem('gm_current');
+	if(email){
+		const users=JSON.parse(localStorage.getItem('gm_users')||'[]');
+		const me=users.find(u=>u.email===email);
+		if(me){
+			const h=document.createElement('p');
+			h.className='notice';
+			h.textContent=`Hi ${me.name} (${me.role}, ${me.stream}). We’ll tailor mentors based on: ${me.interests.join(', ') || 'your profile'}.`;
+			document.querySelector('.features').prepend(h);
+		}
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!-- skill-swap.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Skill Swap & Team Finder</title>
+	<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+	<header class="nav">
+		<div class="nav-left">
+			<div class="brand"><div class="brand-logo">CC</div><div class="brand-text">CampusConnect</div></div>
+			<nav class="nav-links">
+				<a href="index.html">Home</a>
+				<a href="mentorship.html">Mentorship Hub</a>
+				<a href="events.html">Events & Opportunities</a>
+				<a href="skill-swap.html">Skill Swap & Team Finder</a>
+				<a href="anonymous-chat.html">Anonymous Chat</a>
+			</nav>
+		</div>
+		<div class="nav-right">
+			<a class="btn ghost" href="auth.html#signin">Sign In</a>
+			<a class="btn solid" href="auth.html#signup">Sign Up</a>
+		</div>
+	</header>
+
+	<section class="features" style="margin-top:20px">
+		<h2>Skill Swap & Team Finder</h2>
+		<div class="form-grid" style="margin:12px 0">
+			<div class="form-row">
+				<label>You can teach</label>
+				<input id="teach" placeholder="e.g. Java, UI/UX, SQL"/>
+			</div>
+			<div class="form-row">
+				<label>You want to learn</label>
+				<input id="learn" placeholder="e.g. TensorFlow, Backend, Flutter"/>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn solid" id="post">Post</button>
+			<p class="small">Find teammates for hacks and projects.</p>
+		</div>
+		<hr class="sep"/>
+		<div id="posts" class="features-grid"></div>
+	</section>
+
+	<script>
+	const email=localStorage.getItem('gm_current');
+	const users=JSON.parse(localStorage.getItem('gm_users')||'[]');
+	const me=users.find(u=>u.email===email);
+	const posts=JSON.parse(localStorage.getItem('gm_posts')||'[]');
+	function save(){ localStorage.setItem('gm_posts',JSON.stringify(posts)); }
+	function render(){
+		const box=document.getElementById('posts'); box.innerHTML='';
+		posts.slice().reverse().forEach(p=>{
+			const el=document.createElement('div'); el.className='feature';
+			el.innerHTML=`<h4>${p.title}</h4>
+				<p>Teach: ${p.teach.join(', ')||'-'} • Learn: ${p.learn.join(', ')||'-'}</p>
+				<p class="small">By ${p.byName} (${p.role}, ${p.stream})</p>`;
+			box.appendChild(el);
+		});
+	}
+	document.getElementById('post').onclick=()=>{
+		if(!me){ alert('Please sign in to post.'); return; }
+		const teach=document.getElementById('teach').value.split(',').map(s=>s.trim()).filter(Boolean);
+		const learn=document.getElementById('learn').value.split(',').map(s=>s.trim()).filter(Boolean);
+		if(!teach.length && !learn.length){ alert('Add at least one skill.'); return; }
+		posts.push({
+			title:`Team/Swap by ${me.name}`,
+			teach,learn,by:me.email,byName:me.name,role:me.role,stream:me.stream,at:Date.now()
+		});
+		save(); render(); document.getElementById('teach').value=''; document.getElementById('learn').value='';
+	};
+	render();
+	</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!-- auth.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>CampusConnect | Sign In / Sign Up</title>
+	<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+	<header class="nav">
+		<div class="nav-left">
+			<div class="brand">
+				<div class="brand-logo">CC</div>
+				<div class="brand-text">CampusConnect</div>
+			</div>
+			<nav class="nav-links">
+				<a href="index.html">Home</a>
+				<a href="mentorship.html">Mentorship Hub</a>
+				<a href="events.html">Events & Opportunities</a>
+				<a href="skill-swap.html">Skill Swap & Team Finder</a>
+				<a href="anonymous-chat.html">Anonymous Chat</a>
+			</nav>
+		</div>
+		<div class="nav-right">
+			<a class="btn ghost" href="auth.html#signin">Sign In</a>
+			<a class="btn solid" href="auth.html#signup">Sign Up</a>
+		</div>
+	</header>
+
+	<div class="auth-wrap">
+		<div class="auth-card">
+			<div class="auth-side">
+				<h2>Welcome to CampusConnect</h2>
+				<p class="small">Build your network. Learn faster. Join teams. Speak freely.</p>
+				<ul class="small">
+					<li>Freshman–Senior–Alumni onboarding</li>
+					<li>Recommendations by skills & interests</li>
+					<li>Safe, moderated anonymous chat</li>
+				</ul>
+				<p class="notice">Note: For production, use Firebase Auth + Firestore (guide below).</p>
+			</div>
+			<div class="auth-form">
+				<div class="tabs">
+					<button class="tab" id="tab-signup">Sign Up</button>
+					<button class="tab" id="tab-signin">Sign In</button>
+				</div>
+
+				<form id="signup-form">
+					<div class="form-grid">
+						<div class="form-row">
+							<label>Full Name</label>
+							<input type="text" id="su-name" placeholder="Your name" required/>
+						</div>
+						<div class="form-row">
+							<label>Email</label>
+							<input type="email" id="su-email" placeholder="you@college.edu" required/>
+						</div>
+						<div class="form-row">
+							<label>Password</label>
+							<input type="password" id="su-pass" placeholder="Min 6 characters" required minlength="6"/>
+						</div>
+						<div class="form-row">
+							<label>Role</label>
+							<select id="su-role" required>
+								<option value="">Select</option>
+								<option>Freshman</option>
+								<option>Senior</option>
+								<option>Alumni</option>
+							</select>
+						</div>
+						<div class="form-row">
+							<label>Year of Study</label>
+							<select id="su-year" required>
+								<option value="">Select</option>
+								<option>I</option><option>II</option><option>III</option><option>IV</option>
+							</select>
+						</div>
+						<div class="form-row">
+							<label>Stream</label>
+							<select id="su-stream" required>
+								<option value="">Select</option>
+								<option>CSE</option><option>IT</option><option>AIML</option><option>DS</option>
+								<option>Cybersecurity</option><option>EEE</option><option>ECE</option>
+								<option>Mechanical</option><option>Civil</option>
+							</select>
+						</div>
+						<div class="form-row" style="grid-column:1/-1">
+							<label>Interests (comma separated)</label>
+							<input type="text" id="su-interests" placeholder="e.g. Python, WebDev Frontend, Databases, Music, Dance, Sports, Literature"/>
+							<div class="tag-hint">Tip: include programming languages, AI/ML, frontend/backend, DB, or non-tech interests.</div>
+						</div>
+					</div>
+					<div class="form-actions">
+						<div class="help">By signing up, you agree to our community guidelines.</div>
+						<button class="btn solid" type="submit">Create Account</button>
+					</div>
+					<hr class="sep"/>
+				</form>
+
+				<form id="signin-form" style="display:none">
+					<div class="form-grid">
+						<div class="form-row" style="grid-column:1/-1">
+							<label>Email</label>
+							<input type="email" id="si-email" placeholder="you@college.edu" required/>
+						</div>
+						<div class="form-row" style="grid-column:1/-1">
+							<label>Password</label>
+							<input type="password" id="si-pass" placeholder="Your password" required/>
+						</div>
+					</div>
+					<div class="form-actions">
+						<a class="small" href="#">Forgot password?</a>
+						<button class="btn solid" type="submit">Sign In</button>
+					</div>
+				</form>
+
+				<p class="small">After sign in, you’ll be redirected to the Mentorship Hub.</p>
+			</div>
+		</div>
+
+		<div style="margin-top:14px">
+			<p class="small">Demo storage uses localStorage. See “Production storage (Firebase)” in the code comments below.</p>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
+	<script>
+	// Tabs and deep-link
+	const tabSignup=document.getElementById('tab-signup');
+	const tabSignin=document.getElementById('tab-signin');
+	const formSignup=document.getElementById('signup-form');
+	const formSignin=document.getElementById('signin-form');
+	function setTab(mode){
+		const isUp=mode==='signup';
+		formSignup.style.display=isUp?'block':'none';
+		formSignin.style.display=isUp?'none':'block';
+		tabSignup.classList.toggle('active',isUp);
+		tabSignin.classList.toggle('active',!isUp);
+		location.hash=isUp?'#signup':'#signin';
+	}
+	tabSignup.onclick=()=>setTab('signup');
+	tabSignin.onclick=()=>setTab('signin');
+	if(location.hash==='#signin'){ setTab('signin'); } else { setTab('signup'); }
+
+	// Demo signup: store user in localStorage (NOT for production)
+	formSignup.addEventListener('submit',e=>{
+		e.preventDefault();
+		const user={
+			name:document.getElementById('su-name').value.trim(),
+			email:document.getElementById('su-email').value.trim().toLowerCase(),
+			pass:document.getElementById('su-pass').value,
+			role:document.getElementById('su-role').value,
+			year:document.getElementById('su-year').value,
+			stream:document.getElementById('su-stream').value,
+			interests:document.getElementById('su-interests').value.split(',').map(s=>s.trim()).filter(Boolean),
+			createdAt:Date.now()
+		};
+		const users=JSON.parse(localStorage.getItem('gm_users')||'[]');
+		if(users.some(u=>u.email===user.email)){ alert('Account already exists. Please sign in.'); setTab('signin'); return; }
+		users.push(user);
+		localStorage.setItem('gm_users',JSON.stringify(users));
+		localStorage.setItem('gm_current',user.email);
+		alert('Account created! Redirecting to Mentorship Hub.');
+		window.location.href='mentorship.html';
+	});
+
+	// Demo signin: check credentials from localStorage
+	formSignin.addEventListener('submit',e=>{
+		e.preventDefault();
+		const email=document.getElementById('si-email').value.trim().toLowerCase();
+		const pass=document.getElementById('si-pass').value;
+		const users=JSON.parse(localStorage.getItem('gm_users')||'[]');
+		const found=users.find(u=>u.email===email && u.pass===pass);
+		if(!found){ alert('Invalid credentials.'); return; }
+		localStorage.setItem('gm_current',found.email);
+		alert('Welcome back! Redirecting...');
+		window.location.href='mentorship.html';
+	});
+	</script>
+</body>
+</html>
